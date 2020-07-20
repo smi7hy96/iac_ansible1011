@@ -37,7 +37,7 @@ ansible-playbook playbook_nginx.yml
 ```
 ansible-playbook playbook_db.yml
 ```
-- Run the app playbook to install all the dependencies necessary to run the sparta application (NodeJS, Python, PM2 etc.)
+- Run the app playbook to install all the dependencies necessary to run the sparta application (NodeJS, Python, PM2 etc.) --> there may be some errors with seeding, do not worry about this for now, the app will still work
 ```
 ansible-playbook playbook.yml
 ```
