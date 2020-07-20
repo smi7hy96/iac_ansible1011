@@ -42,7 +42,16 @@
         name: mongodb-org
         state: present
         update_cache: yes
+      ignore_errors: yes
     - name: MongoDB - Running state
       service:
         name: mongod
         state: started
+      ignore_errors: yes
+    - name: bind ip
+      lineinfile:
+        path: /etc/mongod.conf
+        line: s,\\(^[[:blank:]]*bindIp:\\) .*,\\1 0.0.0.0,
+    handlers:
+      - name: restart mongodb
+        service: name=mongodb state=restarted
