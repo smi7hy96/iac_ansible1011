@@ -1,0 +1,13 @@
+---
+  - hosts: all
+
+    gather_facts: yes
+
+    become: true
+
+    tasks:
+
+    - name: Copy Directory ssh config
+      copy:
+        src: /home/vagrant/iac_ansible1011/environment/config/all_machines
+        dest: /home/vagrant/environment/config

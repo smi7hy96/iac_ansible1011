@@ -1,57 +1,50 @@
-# Ansible and Infrastructre as code :taco:
+# Ansible Controller Set-up tutorial
 
-This lecture we will look at:
-- IAC (Infrastructure as code)
-- Configuration Management tools
-- What is Ansible
-- Why Ansible
-
-- Installing ansible (Already done)
-- Create a multi environment setup
-- Use Ansible to configure the environments
-- File strucres and Ansible
-- Adhock comands
-- Playbooks
-
-
-### Infrastructure As Code (ASC)
-- setting up infrastructre with code as oposed to clicking away
-- have a source code that is more robust than isolated scripts
-
-### Configuration Management tools
-They are the tools that put IAC into practice along with orchestration tools.
-
-Configuration management tools include:
-- Chef (ruby)
-- Puppet
-- Ansible
-- Other
-
-#### Orchestration tools
-These tools aim more to configure the networking and deployment at scale.
-These tools include:
-- Ansible
-- Terraform (hashicorp)
-- Other
-
-
-### Ansible - Simply put
-Ansible is a high level language for dealing with powershell vs bash environments. For dealing with different package managers. And generally abstracting the most used comands and operations in provision so that you become more infrastructure agnostic. It is also open source (also means free). Built on python.
-
---> Flexibiliy, Easy of use, robustness and cost
-
-- Free
-- Allows us to become infrastructure agnostic
-- Because of IAS and configuration Management tool it increases robustness
-- Hopefully it's easy to use -> it is. Just set up a YMAL file for your playbooks
-
-It allows for a multi and hybrid-cloud-premisis-environment mangament (orchestration)
-- Allows us to setup and track several machines. Example:
-  - webserver
-  - db
-  - aws
-
-### Installing ansible
-
-- On windows, get a vm and install it on a ubuntu distribution
-- on mac, use python.
+- Set up vagrant machines in terminal
+```
+vagrant up
+```
+- SSH into ansible controller machine
+```
+vagrant ssh ansible
+```
+- Create SSH Key inside ansible controller machine
+```
+ssh-keygen -t rsa
+#leave name and passphrases empty
+```
+- Copy newly created key into each of the agent nodes, using ssh-copy-id and they're ip addresses.
+```
+ssh-copy-id -i ~/.ssh id_rsa.pub root@192.168.10.10
+#when prompted to accept enter 'yes'
+#when prompted for password enter 'vagrant'
+#repeat this another 2 times with 192.168.10.20 & 192.168.10.30
+```
+- Now to start running the playbooks:
+```
+cd ~/iac_ansible1011/environment/ansible/playbooks
+```
+- Run the copy playbook to copy the app and nginx conf files to the web machine
+```
+ansible-playbook playbook_copy_app.yml
+#This may take some time!
+```
+- Install and alter the nginx server so that it reverse proxy's correctly (port 3000 --> port 80)
+```
+ansible-playbook playbook_nginx.yml
+```
+- To get the /posts page to work later on, first we must install the mongdb dependencies into our db machine - currently not operational
+```
+ansible-playbook playbook_db.yml
+```
+- Run the app playbook to install all the dependencies necessary to run the sparta application (NodeJS, Python, PM2 etc.)
+```
+ansible-playbook playbook.yml
+```
+- NOW if you try and go to the web IP in your browser, you should be greeted by the sparta logo saying 'The app is running correctly'
+```
+# http://192.168.10.10
+# or
+# development.local
+# The /fibonacci/x page works too; where x is any number (warning: high numbers may crash server! keep it low ~ 10)
+```

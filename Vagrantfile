@@ -15,8 +15,8 @@ Vagrant.configure("2") do |config|
     web.vm.hostname = "web"
     #copy over files
     web.vm.synced_folder "environment/config/all_machines", "/home/vagrant/environment/config"
-    web.vm.synced_folder "app", "/home/vagrant/app"
-    web.vm.synced_folder "environment/nginx", "/home/vagrant/environment/config/nginx"
+    # web.vm.synced_folder "app", "/home/vagrant/app"
+    # web.vm.synced_folder "environment/nginx", "/home/vagrant/environment/config/nginx"
     #assign a hostname for browser access
     web.hostsupdater.aliases = ["development.local"]
     #run provision

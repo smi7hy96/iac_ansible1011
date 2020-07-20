@@ -80,6 +80,13 @@
       npm:
         name: pm2
         global: yes
+
+    - name: NODE | Seed Posts
+      shell: node seed.js
+      args:
+        chdir: /home/vagrant/app/seeds
+      ignore_errors: yes
+
     - name: NODE | Stop APP
       shell: pm2 stop all
       args:
@@ -91,6 +98,7 @@
       args:
         chdir: /home/vagrant/app
       ignore_errors: yes
+
   handlers:
     - name: restart nginx
       service: name=nginx state=restarted
