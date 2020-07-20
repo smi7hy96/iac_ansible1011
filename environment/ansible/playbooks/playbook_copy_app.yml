@@ -1,0 +1,13 @@
+---
+  - hosts: web
+
+    gather_facts: yes
+
+    become: true
+
+    tasks:
+
+    - name: Copy Directory APP
+      copy:
+        src:/home/ubuntu/app
+        dest:/home/ubuntu
