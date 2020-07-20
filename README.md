@@ -33,7 +33,7 @@ ansible-playbook playbook_copy_app.yml
 ```
 ansible-playbook playbook_nginx.yml
 ```
-- To get the /posts page to work later on, first we must install the mongdb dependencies into our db machine - currently not operational
+- To get the /posts page to work later on, first we must install the mongdb dependencies into our db machine - currently not operational - *PLEASE SKIP*
 ```
 ansible-playbook playbook_db.yml
 ```
