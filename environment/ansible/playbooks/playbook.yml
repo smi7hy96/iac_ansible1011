@@ -88,14 +88,6 @@
     - name: stop app if running
       command: forever stopall
       ignore_errors: yes
-    # - name: start app
-    #   command: forever start app.js --name server
-    #   args:
-    #     chdir: /home/vagrant/app
-    # - name: seed posts
-    #   command: node seed.js --name server
-    #   args:
-    #     chdir: /home/vagrant/app/seeds
     - name: start app -shell
       shell:
         cmd: . ~root/.bashrc && forever start app.js
@@ -105,12 +97,6 @@
         cmd: . ~root/.bashrc && node seed.js
         chdir: /home/vagrant/app/seeds
 
-    # # - name: NODE | Seed Posts
-    # #   shell: node seed.js
-    # #   args:
-    # #     chdir: /home/vagrant/app/seeds
-    # #   ignore_errors: yes
-    #
     # - name: NODE | Stop APP
     #   shell: pm2 stop all
     #   args:
