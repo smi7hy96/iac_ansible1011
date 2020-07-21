@@ -20,8 +20,9 @@ ssh-copy-id -i ~/.ssh id_rsa.pub root@192.168.10.10
 #when prompted for password enter 'vagrant'
 #repeat this another 2 times with 192.168.10.20 & 192.168.10.30
 ```
-- Clone this repo into the ansible controller machine:
+- Clone this repo into the ansible controller machine ~ directory:
 ```
+cd ~
 git clone git@github.com:smi7hy96/iac_ansible1011.git
 ```
 - Now to start running the playbooks:
