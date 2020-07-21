@@ -37,7 +37,7 @@ ansible-playbook playbook_nginx.yml
 ```
 ansible-playbook playbook_db.yml
 ```
-- Run the app playbook to install all the dependencies necessary to run the sparta application (NodeJS, Python, PM2 etc.) --> there may be some errors with seeding, do not worry about this for now, the app will still work
+- Run the app playbook to install all the dependencies necessary to run the sparta application (NodeJS, Python, PM2 etc.)
 ```
 ansible-playbook playbook.yml
 ```
@@ -47,4 +47,5 @@ ansible-playbook playbook.yml
 # or
 # development.local
 # The /fibonacci/x page works too; where x is any number (warning: high numbers may crash server! keep it low ~ 10)
+# The /posts page will work too ! :)
 ```
