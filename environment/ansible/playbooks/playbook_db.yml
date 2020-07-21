@@ -22,36 +22,53 @@
     #   - name: start mongodb
     #     service: name=mongod state=started
 
-    - name: MongoDB - Import public key
+    # - name: MongoDB - Import public key
+    #   apt_key:
+    #     keyserver: hkp://keyserver.ubuntu.com:80
+    #     id: EA312927
+    #
+    # - name: Update and upgrade apt packages
+    #   become: true
+    #   apt:
+    #     upgrade: yes
+    #     update_cache: yes
+    #
+    # - name: MongoDB - Add repository #THE PROBLEM
+    #   apt_repository:
+    #     filename: '/etc/apt/sources.list.d/mongodb-org-3.2.list'
+    #     repo: 'deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse'
+    #     state: present
+    #     update_cache: yes
+    #
+    # - name: MongoDB - Install MongoDB
+    #   apt:
+    #     name: mongodb-org
+    #     state: present
+    #     update_cache: yes
+    #   ignore_errors: yes
+    - name: import key
       apt_key:
-        keyserver: hkp://keyserver.ubuntu.com:80
-        id: EA312927
-    - name: Update and upgrade apt packages
-      become: true
-      apt:
-        upgrade: yes
-        update_cache: yes
-    - name: MongoDB - Add repository
-      apt_repository:
-        filename: '/etc/apt/sources.list.d/mongodb-org-3.2.list'
-        repo: 'deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse'
+        url: https://www.mongodb.org/static/pgp/server-3.2.asc
         state: present
-        update_cache: yes
-    - name: MongoDB - Install MongoDB
-      apt:
-        name: mongodb-org
-        state: present
-        update_cache: yes
-      ignore_errors: yes
+    - name: add mongodb repo
+      apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse' state=present
+    - name: install mongodb
+      apt: pkg=mongodb-org state=latest update_cache=yes
+    - name:
+      shell: sudo sed -i "s,\\(^[[:blank:]]*bindIp:\\) .*,\\1 0.0.0.0," /etc/mongod.conf
+
+
     - name: MongoDB - Running state
       service:
         name: mongod
         state: started
       ignore_errors: yes
-    - name: bind ip
-      lineinfile:
-        path: /etc/mongod.conf
-        line: s,\\(^[[:blank:]]*bindIp:\\) .*,\\1 0.0.0.0,
+    #
+    # - name: bind ip  #untested, havent made it this far yet
+    #   lineinfile:
+    #     path: /etc/mongod.conf
+    #     line: s,\\(^[[:blank:]]*bindIp:\\) .*,\\1 0.0.0.0,
+    #
     handlers:
       - name: restart mongodb
         service: name=mongodb state=restarted

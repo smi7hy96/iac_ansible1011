@@ -8,7 +8,7 @@
 
   gather_facts: yes
 # gethering facts before performing any tasks
-
+#  remote_user: root
   become: true
 # become is used to get root permission to perform any tasks that may require admin access
 # set variables
@@ -58,7 +58,7 @@
         state: present
 
     - name: Check if mongodb line is in .bashrc
-      command: grep -Fxq "export DB_HOST=mongodb://192.168.10.20:27017/posts" /home/vagrant/.bashrc
+      command: grep -Fxq "export DB_HOST=mongodb://192.168.10.20:27017/posts" ~root/.bashrc
       register: checkbashrc
       check_mode: no
       ignore_errors: yes
@@ -66,38 +66,63 @@
 
     - name: Add mongodb ip to bashrc
       lineinfile:
-        path: /home/vagrant/.bashrc
+        path: ~root/.bashrc
         line: export DB_HOST=mongodb://192.168.10.20:27017/posts
       when: checkbashrc.rc != 0
 
     - name: source bashrc
-      shell: . ~/.bashrc
-      args:
-        chdir: /home/vagrant
+      shell: . ~root/.bashrc
       ignore_errors: yes
-
-    - name: Install PM2
+    - name: echo ip
+      shell: . ~root/.bashrc && echo $DB_HOST >> variable.md
+      ignore_errors: yes
+    # - name: Install PM2
+    #   npm:
+    #     name: pm2
+    #     global: yes
+    - name: Install Forever
       npm:
-        name: pm2
+        name: forever
         global: yes
-
-    - name: NODE | Seed Posts
-      shell: node seed.js
-      args:
+        state: present
+    - name: stop app if running
+      command: forever stopall
+      ignore_errors: yes
+    # - name: start app
+    #   command: forever start app.js --name server
+    #   args:
+    #     chdir: /home/vagrant/app
+    # - name: seed posts
+    #   command: node seed.js --name server
+    #   args:
+    #     chdir: /home/vagrant/app/seeds
+    - name: start app -shell
+      shell:
+        cmd: . ~root/.bashrc && forever start app.js
+        chdir: /home/vagrant/app
+    - name: node seeds -shell
+      shell:
+        cmd: . ~root/.bashrc && node seed.js
         chdir: /home/vagrant/app/seeds
-      ignore_errors: yes
 
-    - name: NODE | Stop APP
-      shell: pm2 stop all
-      args:
-        chdir: /home/vagrant/app
-      ignore_errors: yes
+    # # - name: NODE | Seed Posts
+    # #   shell: node seed.js
+    # #   args:
+    # #     chdir: /home/vagrant/app/seeds
+    # #   ignore_errors: yes
+    #
+    # - name: NODE | Stop APP
+    #   shell: pm2 stop all
+    #   args:
+    #     chdir: /home/vagrant/app
+    #   ignore_errors: yes
+    #
+    # - name: NODE | Start APP
+    #   shell: pm2 start app.js --name server
+    #   args:
+    #     chdir: /home/vagrant/app
+    #   ignore_errors: yes
 
-    - name: NODE | Start APP
-      shell: pm2 start app.js --name server
-      args:
-        chdir: /home/vagrant/app
-      ignore_errors: yes
 
   handlers:
     - name: restart nginx
