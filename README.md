@@ -1,5 +1,8 @@
 # Ansible Controller Set-up tutorial
-
+- First Clone the git repo into your local directory and ensure you have a VM tool such as VirtualBox installed to launch the virtual machines.
+```
+git clone git@github.com:smi7hy96/iac_ansible1011.git
+```
 - Set up vagrant machines in terminal
 ```
 vagrant up
