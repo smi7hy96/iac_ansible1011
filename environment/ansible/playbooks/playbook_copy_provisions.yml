@@ -1,0 +1,13 @@
+---
+  - hosts: web:db:aws
+
+    gather_facts: yes
+
+    become: true
+
+    tasks:
+
+    - name: Copy Provision
+      copy:
+        src: /home/vagrant/iac_ansible1011/environment/all_machines/
+        dest: /home/vagrant/environment/config
