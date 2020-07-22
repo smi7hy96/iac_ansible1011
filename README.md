@@ -32,7 +32,7 @@ cd ~/iac_ansible1011/environment/ansible/playbooks
 - Run the copy playbook to copy the app and nginx conf files to the web machine
 ```
 ansible-playbook playbook_copy_app.yml
-#This may take some time!
+#This may take some time! #This has been done for you in the Vagrant Set Up for now so skip this step --> purely to save launch time
 ```
 - Install and alter the nginx server so that it reverse proxy's correctly (port 3000 --> port 80)
 ```

@@ -73,7 +73,7 @@
     - name: source bashrc
       shell: . ~root/.bashrc
       ignore_errors: yes
-    - name: echo ip
+    - name: echo ip - for testing variable output
       shell: . ~root/.bashrc && echo $DB_HOST >> variable.md
       ignore_errors: yes
     # - name: Install PM2
