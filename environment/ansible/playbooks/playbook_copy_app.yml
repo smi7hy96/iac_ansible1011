@@ -8,7 +8,7 @@
     tasks:
 
     - name: Copy Directory APP
-      copy:
+      synchronize:
         src: /home/vagrant/iac_ansible1011/app/
         dest: /home/vagrant/app
     - name: Copy Directory Nginx conf

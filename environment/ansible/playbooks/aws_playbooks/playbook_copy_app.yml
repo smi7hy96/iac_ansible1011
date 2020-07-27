@@ -1,0 +1,24 @@
+---
+  - hosts: ec2
+
+    gather_facts: yes
+
+    become: true
+
+    tasks:
+    # - name: Install the unzip pkg
+    #   apt:
+    #     name: unzip
+    #     state: present
+    # - name: Copy Directory APP
+    #   copy:
+    #     src: /home/vagrant/iac_ansible1011/app/
+    #     dest: /home/ubuntu/app
+    - name: Copy Directory APP
+      synchronize:
+        src: /home/vagrant/iac_ansible1011/app/
+        dest: /home/ubuntu/app
+    - name: Copy Directory Nginx conf
+      copy:
+        src: /home/vagrant/iac_ansible1011/environment/nginx
+        dest: /home/ubuntu/environment/config/nginx

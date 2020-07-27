@@ -1,0 +1,119 @@
+# This is an example of ansible playbook written in YMAL
+
+# YAML FILE STARTS WITH THREE --- DASHES(---)
+---
+- hosts: ec2
+# host is to define the name of your host machine, group or all servers
+# in this example we are targeting server called web
+
+  gather_facts: yes
+# gethering facts before performing any tasks
+#  remote_user: root
+  become: true
+# become is used to get root permission to perform any tasks that may require admin access
+# set variables
+  vars:
+    NODEJS_VERSION: "6"
+    ansible_distribution_release: "xenial" #trusty
+  tasks:
+#Tasks are executed in order, one at a time, against all Servers matched by the host pattern
+# Every task should have a name, which is included in the output from running the playbook
+# The goal of each task is to execute a module, with very specific arguments.
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+
+    - name: Check for Python
+      raw: test -e /usr/bin/python
+      changed_when: false
+      failed_when: false
+      register: check_python
+
+    - name: Install Python
+      raw: apt -y update && apt install -y python-minimal
+      when: check_python.rc != 0
+
+    - name: Install the gpg key for nodejs LTS
+      apt_key:
+        url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+        state: present
+
+    - name: Install the nodejs LTS repos
+      apt_repository:
+        repo: "deb https://deb.nodesource.com/node_{{ NODEJS_VERSION }}.x {{ ansible_distribution_release }} main"
+        state: present
+        update_cache: yes
+
+    - name: Install the nodejs
+      apt:
+        name: nodejs
+        state: present
+
+    # - name: install NPM
+    #   apt:
+    #     name: npm
+    #     state: present
+
+    # - name: Check if mongodb line is in .bashrc
+    #   command: grep -Fxq "export DB_HOST=mongodb://192.168.10.20:27017/posts" ~root/.bashrc
+    #   register: checkbashrc
+    #   check_mode: no
+    #   ignore_errors: yes
+    #   changed_when: no
+    #
+    # - name: Add mongodb ip to bashrc
+    #   lineinfile:
+    #     path: ~root/.bashrc
+    #     line: export DB_HOST=mongodb://192.168.10.20:27017/posts
+    #   when: checkbashrc.rc != 0
+    #
+    # - name: source bashrc
+    #   shell: . ~root/.bashrc
+    #   ignore_errors: yes
+    # - name: echo ip - for testing variable output
+    #   shell: . ~root/.bashrc && echo $DB_HOST >> variable.md
+    #   ignore_errors: yes
+    # - name: Install PM2
+    #   npm:
+    #     name: pm2
+    #     global: yes
+    - name: Install Forever
+      npm:
+        name: forever
+        global: yes
+        state: present
+    - name: stop app if running
+      command: forever stopall
+      ignore_errors: yes
+    - name: start app -shell
+      shell:
+        cmd: . ~root/.bashrc && forever start app.js
+        chdir: /home/ubuntu/app
+    # - name: node seeds -shell
+    #   shell:
+    #     cmd: . ~root/.bashrc && node seed.js
+    #     chdir: /home/ubuntu/app/seeds
+
+    # - name: NODE | Stop APP
+    #   shell: pm2 stop all
+    #   args:
+    #     chdir: /home/vagrant/app
+    #   ignore_errors: yes
+    #
+    # - name: NODE | Start APP
+    #   shell: pm2 start app.js --name server
+    #   args:
+    #     chdir: /home/vagrant/app
+    #   ignore_errors: yes
+
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted

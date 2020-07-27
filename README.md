@@ -18,7 +18,8 @@ ssh-keygen -t rsa
 ```
 - Copy newly created key into each of the agent nodes, using ssh-copy-id and they're ip addresses.
 ```
-ssh-copy-id -i ~/.ssh id_rsa.pub root@192.168.10.10
+ssh-copy-id -i ~/.ssh id_
+rsa.pub root@192.168.10.10
 #when prompted to accept enter 'yes'
 #when prompted for password enter 'vagrant'
 #repeat this another 2 times with 192.168.10.20 & 192.168.10.30

@@ -1,0 +1,29 @@
+- hosts: ec2ami
+# host is to define the name of your host machine, group or all servers
+# in this example we are targeting server called web
+
+  gather_facts: yes
+# gethering facts before performing any tasks
+
+  become: true
+# become is used to get root permission to perform any tasks that may require admin access
+# set variables
+  vars:
+    NODEJS_VERSION: "6"
+    ansible_distribution_release: "bionic" #trusty
+  tasks:
+
+    - name: Make Sure NGINX Service Is Running
+      become: yes
+      service:
+        name: nginx
+        state: restarted
+        enabled: yes
+
+    - name: stop app if running
+      command: forever stopall
+      ignore_errors: yes
+    - name: start app -shell
+      shell:
+        cmd: . ~root/.bashrc && forever start app.js
+        chdir: /home/ubuntu/app
